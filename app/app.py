@@ -13,7 +13,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def api_health_check():
     message = 'Nice tutorial!'
-    return Response(dumps(response), status=200, mimetype='application/json')
+    return Response(message, status=200, mimetype='application/json')
 
 @app.route('/test-textract', methods=['GET'])
 def api_test_textract():
