@@ -59,9 +59,8 @@ def upload_file():
         return resp
     if success:
         # add service textract responce
-        resp = jsonify({'message' : 'Files successfully processed'})
+        resp = jsonify({'message' : 'Files successfully processed', 'responses_docs': responsesDocs})
         resp.status_code = 201
-        resp.responses_docs = responsesDocs
         return resp
     else:
         resp = jsonify(errors)
