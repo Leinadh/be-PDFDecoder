@@ -43,8 +43,7 @@ def upload_file():
 	
     for file in files:		
         if file and allowed_file(file.filename):
-            print(type(file))
-            output = processDocument(file)  
+            output = processDocument(file.read())  
             output['file_name'] = file.filename
             responsesDocs.append(output)
             success = True
