@@ -59,6 +59,7 @@ def upload_file():
         # add service textract responce
         resp = jsonify({'message' : 'Files successfully processed', 'responses_docs': responsesDocs})
         resp.status_code = 201
+        resp.headers.add('Access-Control-Allow-Origin', '*')
         return resp
     else:
         resp = jsonify(errors)
