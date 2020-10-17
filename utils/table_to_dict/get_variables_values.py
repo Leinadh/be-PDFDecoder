@@ -1,6 +1,5 @@
-##!pip install fuzzywuzzy
-##!pip install unidecode
-
+#!pip install fuzzywuzzy
+#!pip install unidecode
 
 import pandas as pd
 import numpy as np
@@ -50,30 +49,6 @@ def words_unidecode(x):
   return unidecode.unidecode(str(x)) if pd.notnull(x) else ""
   
   
-def is_year(x):
-  if pd.notnull(x):
-    expr = "[\s]+201[0-9]+|^201[0-9]|[\s]201[0-9]$"
-    years = re.findall(expr,str(x))
-
-    return 1 if len(years)>0 else 0
-  else:
-    return 0
-    
-
-def get_year(x):
-  if pd.notnull(x):
-    
-    expr = "[\s]+201[0-9]+|^201[0-9]|[\s]201[0-9]$"
-    years = re.findall(expr,str(x))
-    years = [int(year) for year in years]
-    
-    return np.max(years) if len(years)>0 else 0
-  else:
-    return 0
-    
-    
-
-  
 def processing_text(df):
   _df = df.copy()
   _df = _df.applymap(no_space_start_end)
@@ -85,7 +60,7 @@ def processing_text(df):
 
   return _df
   
-
+  
 def fuzzy_wuzzy(s_evaluado, s_buscado):
   return fuzz.partial_ratio(str(s_evaluado),s_buscado)/100 
 
@@ -109,9 +84,31 @@ def limited_and_partial_ratio(s_evaluado, s_buscado):
     return similarity
   else:
     return difflib.SequenceMatcher(None, s_buscado, s_evaluado).ratio()
+   
+   
+def is_year(x):
+  if pd.notnull(x):
+    expr = "[\s]+201[0-9]+|^201[0-9]|[\s]201[0-9]$"
+    years = re.findall(expr,str(x))
+
+    return 1 if len(years)>0 else 0
+  else:
+    return 0
     
- 
- def get_variables_index(df_doc, dict_parameters, compare_function, treshold=0.85):
+    
+def get_year(x):
+  if pd.notnull(x):
+    
+    expr = "[\s]+201[0-9]+|^201[0-9]|[\s]201[0-9]$"
+    years = re.findall(expr,str(x))
+    years = [int(year) for year in years]
+    
+    return np.max(years) if len(years)>0 else 0
+  else:
+    return 0    
+     
+    
+def get_variables_index(df_doc, dict_parameters, compare_function, treshold=0.85):
 
   dict_variables = {}
 
@@ -149,7 +146,6 @@ def limited_and_partial_ratio(s_evaluado, s_buscado):
   return dict_variables
   
   
-  
 def get_dict_vars_values(df, dict_vars, name_file="variables_indices.json"):
   
   _df = df.copy()
@@ -157,34 +153,37 @@ def get_dict_vars_values(df, dict_vars, name_file="variables_indices.json"):
   pos_row = np.argmax(_df.applymap(is_year).sum(1).values)
   _df.columns = _df.iloc[pos_row]
 
-  years = [get_year(col) for col in _df.columns]
- 
-  year = np.max(years)
- 
-  col_year = _df.columns[np.argmax(years)]
- 
+  years_gen = [get_year(col) for col in _df.columns]
+  year_gen = np.max(years_gen)
+
   dict_vars_values = {}
 
   for key in dict_vars:
+
     x, y = dict_vars[key]
-    value = _df[col_year][x]
+
+    years = [get_year(col) for col in _df.columns[y:]]
+    year = np.max(years)
+    col_year_pos = np.argmax(years)
+    _df_dummy = _df.iloc[:,y:] 
+    value = _df_dummy.iloc[:,col_year_pos][x]
     # value = value.replace('.','')
     # value = value.replace(',','.')
     dict_vars_values[key] = value
   
-  dict_vars_values["Fecha"] = int(year)
+  dict_vars_values["Fecha"] = int(year_gen)
 
   with open(name_file, 'w') as file:
     json.dump(dict_vars_values, file)
 
   return dict_vars_values
-
-
+  
+  
 def main():
   with open('/content/drive/My Drive/HACKATHONBBVA_2020/variable_dictionary/variables.json', 'r') as j:
     dict_parameters = json.load(j)
 
-  path_table = "/content/drive/My Drive/HACKATHONBBVA_2020/doc_to_table/image_Doc2_variables.csv"
+  path_table = "/content/drive/My Drive/HACKATHONBBVA_2020/doc_to_table/image_Doc26_variables.csv"
   path_save = "/content/drive/My Drive/HACKATHONBBVA_2020/final_values/"
   df = pd.read_csv(path_table)
   df = processing_text(df)
@@ -193,4 +192,5 @@ def main():
 
   dict_variables = get_dict_vars_values(df, dict_variables, name_file=path_save + path_table.split('/')[-1].split('.')[0] + '_final.json')
   # dict_variables = get_dict_vars_values(df, dict_parameters, sequence_matcher_similarity, name_file=path_save + path_table.split('/')[-1].split('.')[0] + '_final.json')
+
 
