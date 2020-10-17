@@ -6,11 +6,14 @@ from json import dumps, load, loads
 
 from flask import Flask, render_template, Response
 
+from services.pdf_services import processDocument
+
 app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def api_health_check():
-    message = 'Stev es el Grinch'
+    # processDocument()
+    message = 'Nice tutorial!'
     return Response(message, status=200, mimetype='application/json')
 
 @app.route('/api', methods=['GET'])
