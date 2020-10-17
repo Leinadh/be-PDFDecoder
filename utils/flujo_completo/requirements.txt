@@ -1,0 +1,9 @@
+boto3
+pandas
+matplotlib
+Pillow
+sklearn
+numpy
+glob
+os
+pdf2image
