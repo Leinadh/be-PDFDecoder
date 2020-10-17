@@ -86,10 +86,26 @@ def limited_and_partial_ratio(s_evaluado, s_buscado):
     return difflib.SequenceMatcher(None, s_buscado, s_evaluado).ratio()
    
    
+def encontrar_anhos(s): 
+  if pd.notna(s):
+      s_copy = s
+      special_chars = [' ','/','\\','-']
+      for c in special_chars:
+        s_copy = s_copy.replace(c, c+c)
+      expr = r"^201[0-9]$|^201[0-9][\s\/\-\\]|[\s\/\-\\]201[0-9]$|[\s\/\-\\]201[0-9][\s\/\-\\]"
+      years = re.findall(expr,s_copy)
+      for i  in range(len(years)):
+        for c in special_chars:
+          years[i] = years[i].replace(c, '')
+      return years
+  return None   
+   
 def is_year(x):
   if pd.notnull(x):
-    expr = "[\s]+201[0-9]+|^201[0-9]|[\s]201[0-9]$"
-    years = re.findall(expr,str(x))
+    # expr = "[\s]+201[0-9]+|^201[0-9]|[\s]201[0-9]$"
+    # years = re.findall(expr,str(x))
+    
+    years = encontrar_anhos(x)
 
     return 1 if len(years)>0 else 0
   else:
@@ -99,13 +115,16 @@ def is_year(x):
 def get_year(x):
   if pd.notnull(x):
     
-    expr = "[\s]+201[0-9]+|^201[0-9]|[\s]201[0-9]$"
-    years = re.findall(expr,str(x))
+    # expr = "[\s]+201[0-9]+|^201[0-9]|[\s]201[0-9]$"
+    # years = re.findall(expr,str(x))
+    
+    years = encontrar_anhos(x)
+    
     years = [int(year) for year in years]
     
     return np.max(years) if len(years)>0 else 0
   else:
-    return 0    
+    return 0  
      
     
 def get_variables_index(df_doc, dict_parameters, compare_function, treshold=0.85):
