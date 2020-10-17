@@ -4,6 +4,7 @@ matplotlib
 Pillow
 sklearn
 numpy
-glob
-os
 pdf2image
+fuzzywuzzy
+unidecode
+nltk

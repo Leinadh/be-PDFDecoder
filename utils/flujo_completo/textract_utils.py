@@ -15,8 +15,9 @@ def ShowBoundingBox(draw,box,width,height,boxColor):
 
 def TexTractAnalysis(client,image,image_binary, show_image = True):
     lines = []
-    response = client.analyze_document(Document={'Bytes': image_binary},
-        FeatureTypes=["TABLES", "FORMS"])
+    response = client.detect_document_text(Document={'Bytes':image_binary})
+    ##response = client.analyze_document(Document={'Bytes': image_binary},
+      ##  FeatureTypes=["TABLES", "FORMS"])
     #Get the text blocks
     blocks=response['Blocks']
     width, height =image.size  

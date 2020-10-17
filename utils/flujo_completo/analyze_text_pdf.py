@@ -14,7 +14,7 @@ from get_variables_values import *
 import time
 import sys
 
-path = 'D:/Competencias/BBVA/aws/raw_data'
+path = '/home/stevramos/Documentos/HACKATHONBBVA2020/raw_data'
 output_add_path  = 'output'
 
 split_sep = "<ESC>"
