@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def api_health_check():
-    # processDocument()
+    processDocument()
     message = 'Nice tutorial!'
     return Response(message, status=200, mimetype='application/json')
 

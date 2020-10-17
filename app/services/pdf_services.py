@@ -7,7 +7,7 @@ def processDocument():
     document = 'doc_example.png'
 
     clientTextract = boto3.client('textract', region_name='us-east-1')
-    response = clientTextract.analyze_document(document)
+    response = clientTextract.detect_document_text(Document={'Bytes':document})
     print('Response textract', response)
     return 'uwu'
 
