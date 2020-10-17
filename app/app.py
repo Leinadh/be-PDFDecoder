@@ -45,9 +45,8 @@ def upload_file():
         if file and allowed_file(file.filename):
             print(type(file.stream))
             output = processDocument(file.stream)  
+            output['file_name'] = file.filename
             responsesDocs.append(output)
-            # filename = secure_filename(file.filename)
-            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             success = True
         else:
             errors[file.filename] = 'File type is not allowed'
