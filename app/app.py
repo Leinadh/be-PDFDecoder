@@ -4,9 +4,16 @@ import re
 from datetime import datetime, timedelta
 from json import dumps, load, loads
 
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request, redirect, jsonify
+from werkzeug.utils import secure_filename
+
 
 from services.pdf_services import processDocument
+
+ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg', 'jpeg'])
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 app = Flask(__name__)
 
@@ -19,6 +26,48 @@ def api_health_check():
 def api_test_textract():
     output = processDocument()
     return Response(dumps(output), status=200, mimetype='application/json')
+
+@app.route('/process-documents', methods=['POST'])
+def upload_file():
+    # check if the post request has the file part
+    if 'files[]' not in request.files:
+        resp = jsonify({'message' : 'No file part in the request'})
+        resp.status_code = 400
+        return resp
+	
+    files = request.files.getlist('files[]')
+	
+    errors = {}
+    success = False
+    responsesDocs = []
+	
+    for file in files:		
+        if file and allowed_file(file.filename):
+            print(type(file.stream))
+            output = processDocument(file.stream)  
+            responsesDocs.append(output)
+            # filename = secure_filename(file.filename)
+            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            success = True
+        else:
+            errors[file.filename] = 'File type is not allowed'
+	
+    if success and errors:
+        errors['message'] = 'File(s) successfully uploaded'
+        resp = jsonify(errors)
+        resp.status_code = 500
+        return resp
+    if success:
+        # add service textract responce
+        resp = jsonify({'message' : 'Files successfully processed'})
+        resp.status_code = 201
+        resp.responses_docs = responsesDocs
+        return resp
+    else:
+        resp = jsonify(errors)
+        resp.status_code = 500
+        return resp
+
 
 @app.route('/api', methods=['GET'])
 def api():
