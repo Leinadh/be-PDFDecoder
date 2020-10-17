@@ -10,7 +10,7 @@ import glob
 import os
 from pdf2image import convert_from_path, convert_from_bytes
 from get_table import get_table_variables
-from get_variables_values_v2 import *
+from get_variables_values import *
 import time
 import sys
 
