@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from json import dumps, load, loads
 
 from flask import Flask, render_template, Response, request, redirect, jsonify
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
 
@@ -16,6 +17,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/', methods=['GET'])
 def api_health_check():
@@ -60,6 +62,7 @@ def upload_file():
         resp = jsonify({'message' : 'Files successfully processed', 'responses_docs': responsesDocs})
         resp.status_code = 201
         resp.headers.add('Access-Control-Allow-Origin', '*')
+        print('headers:: ', resp.headers)
         return resp
     else:
         resp = jsonify(errors)
