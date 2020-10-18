@@ -28,12 +28,6 @@ def api_test_textract():
     output = processDocument()
     return Response(dumps(output), status=200, mimetype='application/json')
 
-
-@app.route('/extract-variables-pdf', methods=['POST'])
-def extract_varables_pdf():
-
-
-
 @app.route('/process-documents', methods=['POST'])
 def upload_file():
     # check if the post request has the file part
