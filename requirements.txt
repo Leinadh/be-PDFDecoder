@@ -5,16 +5,21 @@ flask-cors==3.0.9
 
 
 # glob
-numpy==1.14.3
-cython
-pandas==0.25.3
-matplotlib==3.3.2
+# numpy==1.15.4
+# numpy==1.14.3
+# cython
+# numpy==1.17.1
+# pandas==0.25.1
+# pandas==0.23.0
+matplotlib
+#==3.3.2
 Pillow
 sklearn
 pdf2image
 fuzzywuzzy
 unidecode
 nltk
+# scipy
 
 # # table to dict:
 # re
