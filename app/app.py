@@ -12,7 +12,7 @@ from services.pdf_services import analyze_text_pdf
 
 ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg', 'jpeg'])
 
-DOWNLOAD_DIRECTORY = ""
+DOWNLOAD_DIRECTORY = "./"
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
