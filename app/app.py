@@ -4,13 +4,15 @@ import re
 from datetime import datetime, timedelta
 from json import dumps, load, loads
 
-from flask import Flask, render_template, Response, request, redirect, jsonify
+from flask import Flask, render_template, Response, request, redirect, jsonify, send_from_directory
 from flask_cors import CORS
 
 
 from services.pdf_services import analyze_text_pdf
 
 ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg', 'jpeg'])
+
+DOWNLOAD_DIRECTORY = ""
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -70,7 +72,11 @@ def upload_file():
 
 @app.route('/get-document-with-boxes', methods=['POST'])
 def get_document_with_boxes():
-    user = request.args.get('user')
+    doc_name = request.args.get('doc_name')
+    try:
+        return send_from_directory(DOWNLOAD_DIRECTORY, filename=doc_name, as_attachment=True)
+    except FileNotFoundError:
+        abort(404)
 
 @app.route('/api', methods=['GET'])
 def api():
