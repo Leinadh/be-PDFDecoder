@@ -216,6 +216,7 @@ def get_dict_vars_values(df, dict_vars):
   year_gen = np.max(years_gen)
 
   dict_vars_values = {}
+  dict_coord_values = {}
 
   for key in dict_vars:
 
@@ -229,13 +230,14 @@ def get_dict_vars_values(df, dict_vars):
     # value = value.replace('.','')
     # value = value.replace(',','.')
     dict_vars_values[key] = value
-  
+    dict_coord_values[key] = [int(x),int(y + col_year_pos)]
+
   dict_vars_values["FECHA"] = int(year_gen)
 
   #with open(name_file, 'w') as file:
   #  json.dump(dict_vars_values, file)
 
-  return dict_vars_values
+  return dict_vars_values, dict_coord_values
   
   
 def main():

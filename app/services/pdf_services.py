@@ -25,8 +25,8 @@ from scipy.ndimage import interpolation as inter
 path_json_vars = "services/variables.json"
 split_sep = "<ESC>"
 OUTPUT_FORMAT = "png"
-##path_model_nlp = "services/model"
-##path_currency_simbols = "services/currency_symbols.json"
+path_model_nlp = "services/model"
+path_currency_simbols = "services/currency_symbols.json"
 
 
 
@@ -169,9 +169,9 @@ def analyze_text_pdf(DOC_FILE, document):
 
 
 
-    ##nlp = spacy.load(path_model_nlp)
-    ##with open(path_currency_simbols, 'r') as file:
-        ##currency_symbols = json.load(file)
+    nlp = spacy.load(path_model_nlp)
+    with open(path_currency_simbols, 'r') as file:
+        currency_symbols = json.load(file)
 
     if DOC_FILE.split(".")[-1] == "pdf":
         images = convert_from_bytes(document)
@@ -206,30 +206,32 @@ def analyze_text_pdf(DOC_FILE, document):
         
         df_doc_data = processing_text(df_doc_data)
 
-        ##pos_row = np.argmax(df_doc_data.applymap(is_year).sum(1).values)
-        ##n_first_rows = pos_row + 3
+        pos_row = np.argmax(df_doc_data.applymap(is_year).sum(1).values)
+        n_first_rows = pos_row + 3
         
-        ##moneda = get_currency_data(df_doc_data, nlp, currency_symbols, n_first_rows)
-        ##moneda = ",".join(moneda)
+        moneda = get_currency_data(df_doc_data, nlp, currency_symbols, n_first_rows)
+        moneda = ",".join(moneda)
 
-        ##monedas.append(moneda)
+        monedas.append(moneda)
 
         dict_variables = get_variables_index(df_doc_data, dict_parameters, sequence_matcher_similarity)
-        dict_variables = get_dict_vars_values(df_doc_data, dict_variables)
-        dict_variable_doc.update(dict_variables)
+        
+        dict_vars_values, dict_coord_values = get_dict_vars_values(df_doc_data, dict_variables)
+
+        dict_variable_doc.update(dict_vars_values)
         #------------------ Print lines --------------------------#
 
     dict_variable_doc = processing_values_dict(dict_variable_doc)
     dict_variable_doc["DOCUMENTO"] = document_name
 
-    ##monedas = ",".join(monedas) 
+    monedas = ",".join(monedas) 
     
-    ##if monedas=="":
-      ##  monedas = np.nan
+    if monedas=="":
+        monedas = np.nan
 
-    ##dict_variable_doc["UNIDADES DE MEDIDA"] = monedas
+    dict_variable_doc["UNIDADES DE MEDIDA"] = monedas
 
-    ##dict_variable_doc = quitar_vacios_dic(dict_variable_doc)
+    dict_variable_doc = quitar_vacios_dic(dict_variable_doc)
 
     # with open(os.path.join(path,output_add_path,f'{document_name}_0{i}_final.json'), 'w') as file:
     #    json.dump(dict_variable_doc, file)
