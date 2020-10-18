@@ -1,28 +1,27 @@
 Flask==1.0.2
 requests==2.20.0
 boto3==1.15.18
-Werkzeug==1.0.1~
 flask-cors==3.0.9
 
-# # image to table:
-# textract_utils
-# botocore
-# statistics
-# pandas
-# matplotlib
-# Pillow
-# sklearn
-# numpy
-# glob
-# pdf2image
-# boto3
+# image to table:
+textract_utils
+botocore
+statistics
+pandas
+matplotlib
+Pillow
+sklearn
+numpy
+glob
+pdf2image
+boto3
 
-# # table to dict:
-# re
-# nltk
-# unidecode
-# fuzzywuzzy
-# difflib
+# table to dict:
+re
+nltk
+unidecode
+fuzzywuzzy
+difflib
 
-# # preprocess image
-# opencv-python
+# preprocess image
+opencv-python
