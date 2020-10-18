@@ -68,6 +68,9 @@ def upload_file():
         resp.status_code = 500
         return resp
 
+@app.route('/get-document-with-boxes', methods=['POST'])
+def get_document_with_boxes():
+    user = request.args.get('user')
 
 @app.route('/api', methods=['GET'])
 def api():

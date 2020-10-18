@@ -11,9 +11,7 @@ unidecode
 nltk
 scipy
 spacy
+opencv-python
 
 # # table to dict:
 # difflib
-
-# # preprocess image
-# opencv-python
