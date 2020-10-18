@@ -26,7 +26,7 @@ path_json_vars = "services/variables.json"
 split_sep = "<ESC>"
 OUTPUT_FORMAT = "png"
 path_model_nlp = "services/model"
-path_currency_simbols = "services/currency_simbols.json"
+path_currency_simbols = "services/currency_symbols.json"
 
 
 
