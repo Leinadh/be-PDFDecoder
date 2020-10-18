@@ -156,6 +156,28 @@ def make_csv_with_text_data(doc_lines, doc_line_register):
     return data_image
 
 
+def get_bounding_boxes(df_image_col, dict_variables, dict_coord_values):
+
+  df_keys = pd.DataFrame(columns = df_image_col.columns) 
+  df_values = pd.DataFrame(columns = df_image_col.columns)
+
+  keyss = []
+  for key in dict_variables.keys():
+    keys = df_image_col.loc[(df_image_col.row == dict_variables[key][0]) & (df_image_col.column == dict_variables[key][1])][["left","top","height","width"]].values
+
+    keyss.append(keys)
+
+
+
+  values = []
+  for key in  dict_coord_values.keys():
+    value = df_image_col.loc[(df_image_col.row == dict_coord_values[key][0]) & (df_image_col.column == dict_coord_values[key][1])][["left","top","height","width"]].values
+    values.append(value)
+
+  return keyss, values
+
+
+
 
 def analyze_text_pdf(DOC_FILE, document):
     #files_in_dir = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
@@ -217,6 +239,8 @@ def analyze_text_pdf(DOC_FILE, document):
         dict_variables = get_variables_index(df_doc_data, dict_parameters, sequence_matcher_similarity)
         
         dict_vars_values, dict_coord_values = get_dict_vars_values(df_doc_data, dict_variables)
+
+        boxes_keys, boxes_values = get_bounding_boxes(csv_with_columns, dict_variables, dict_coord_values)
 
         dict_variable_doc.update(dict_vars_values)
         #------------------ Print lines --------------------------#
