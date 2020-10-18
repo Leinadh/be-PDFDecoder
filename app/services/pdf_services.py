@@ -1,5 +1,6 @@
 import boto3
 from services.textract_utils import process_text_local
+from services.currency_detector import get_currency_data
 from botocore.config import Config
 from statistics import mode
 import pandas as pd
@@ -14,16 +15,18 @@ from services.get_table import get_table_variables
 from services.get_variables_values import *
 import time
 import sys
+import spacy ## instalar
+from scipy.ndimage import interpolation as inter
+
 
 ##path = '/home/stevramos/Documentos/HACKATHONBBVA2020/raw_data'
 ##output_add_path = 'output'
 
 path_json_vars = "services/variables.json"
-
 split_sep = "<ESC>"
-
 OUTPUT_FORMAT = "png"
-
+path_model_nlp = "services/model"
+path_currency_simbols = "services/currency_simbols.json"
 
 
 
@@ -105,6 +108,32 @@ def plot_image2image(image_file, data_blobs_txtract, image_target_file):
         "RGBA")), np.array(source_img)))).save(image_target_file, OUTPUT_FORMAT)
     return None
 
+def find_skew_angle(img, correct = True):
+    # convert to binary
+    wd, ht = img.size
+    pix = np.array(img.convert('1').getdata(), np.uint8)
+    bin_img = 1 - (pix.reshape((ht, wd)) / 255.0)
+    def find_score(arr, angle):
+        data = inter.rotate(arr, angle, reshape=False, order=0)
+        hist = np.sum(data, axis=1)
+        score = np.sum((hist[1:] - hist[:-1]) ** 2)
+        return hist, score
+    delta = 1
+    limit = 5
+    angles = np.arange(-limit, limit+delta, delta)
+    scores = []
+    for angle in angles:
+        hist, score = find_score(bin_img, angle)
+        scores.append(score)
+    best_score = max(scores)
+    best_angle = angles[scores.index(best_score)]
+    print('Best angle: {}'.format(best_angle))
+    # correct skew
+    if correct:
+        data = inter.rotate(bin_img, best_angle, reshape=False, order=0)
+        img = Image.fromarray((255 * data).astype("uint8")).convert("RGB")
+    return img, best_angle
+
 
 def make_csv_with_text_data(doc_lines, doc_line_register):
     left = []
@@ -138,6 +167,12 @@ def analyze_text_pdf(DOC_FILE, document):
 
     #images = convert_from_bytes(open(document, 'rb').read())
 
+
+
+    nlp = spacy.load(path_model_nlp)
+    with open(path_currency_simbols, 'r') as file:
+        currency_symbols = json.load(file)
+
     if DOC_FILE.split(".")[-1] == "pdf":
         images = convert_from_bytes(document)
     else:
@@ -147,8 +182,12 @@ def analyze_text_pdf(DOC_FILE, document):
 
     dict_variable_doc = {}
 
+    monedas = []
+
     for i, image in enumerate(images):
         image = images[i]
+        image, _ = find_skew_angle(image, correct = True)
+
         document_name = DOC_FILE.split('.')[0]
         
         #source_file = os.path.join(path, output_add_path, f"{document_name}_0{i}.{OUTPUT_FORMAT}")
@@ -166,6 +205,15 @@ def analyze_text_pdf(DOC_FILE, document):
             dict_parameters = json.load(j)
         
         df_doc_data = processing_text(df_doc_data)
+
+        pos_row = np.argmax(df_doc_data.applymap(is_year).sum(1).values)
+        n_first_rows = pos_row + 3
+        
+        moneda = get_currency_data(df_doc_data, nlp, currency_symbols, n_first_rows)
+        moneda = ",".join(moneda)
+
+        monedas.append(moneda)
+
         dict_variables = get_variables_index(df_doc_data, dict_parameters, sequence_matcher_similarity)
         dict_variables = get_dict_vars_values(df_doc_data, dict_variables)
         dict_variable_doc.update(dict_variables)
@@ -173,6 +221,15 @@ def analyze_text_pdf(DOC_FILE, document):
 
     dict_variable_doc = processing_values_dict(dict_variable_doc)
     dict_variable_doc["DOCUMENTO"] = document_name
+
+    monedas = ",".join(monedas) 
+    
+    if monedas=="":
+        monedas = np.nan
+
+    dict_variable_doc["UNIDADES DE MEDIDA"] = monedas
+
+    dict_variable_doc = quitar_vacios_dic(dict_variable_doc)
 
     # with open(os.path.join(path,output_add_path,f'{document_name}_0{i}_final.json'), 'w') as file:
     #    json.dump(dict_variable_doc, file)
