@@ -190,7 +190,7 @@ def get_dict_vars_values(df, dict_vars, name_file="variables_indices.json"):
     # value = value.replace(',','.')
     dict_vars_values[key] = value
   
-  dict_vars_values["Fecha"] = int(year_gen)
+  dict_vars_values["FECHA"] = int(year_gen)
 
   #with open(name_file, 'w') as file:
   #  json.dump(dict_vars_values, file)

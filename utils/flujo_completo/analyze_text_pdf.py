@@ -17,6 +17,8 @@ import sys
 path = '/home/stevramos/Documentos/HACKATHONBBVA2020/raw_data'
 output_add_path  = 'output'
 
+path_json_vars = "../variables.json"
+
 split_sep = "<ESC>"
 
 OUTPUT_FORMAT = "png"
@@ -43,13 +45,14 @@ def main():
             #print (target_file)
             #----------------- Data extraction ----------------------#
             df_doc_data = get_table_variables(csv_with_columns.sort_values('row').reset_index(drop=True))
-            with open('variables.json', 'r') as j:
+            with open(path_json_vars, 'r') as j:
                 dict_parameters = json.load(j)
             df_doc_data = processing_text(df_doc_data)
             dict_variables = get_variables_index(df_doc_data, dict_parameters, sequence_matcher_similarity)
             dict_variables = get_dict_vars_values(df_doc_data, dict_variables, name_file=f'{document_name}_0{i}_final.json')
             dict_variable_doc.update(dict_variables)
             #------------------ Print lines --------------------------#
+        dict_variable_doc["DOCUMENTO"] = document_name
         with open(os.path.join(path,output_add_path,f'{document_name}_0{i}_final.json'), 'w') as file:
             json.dump(dict_variable_doc, file)
         print (f"Process time: {time.time()-start_time}")
