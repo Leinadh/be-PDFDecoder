@@ -52,6 +52,7 @@ def main():
             dict_variables = get_dict_vars_values(df_doc_data, dict_variables, name_file=f'{document_name}_0{i}_final.json')
             dict_variable_doc.update(dict_variables)
             #------------------ Print lines --------------------------#
+        dict_variable_doc = processing_values_dict(dict_variable_doc)
         dict_variable_doc["DOCUMENTO"] = document_name
         with open(os.path.join(path,output_add_path,f'{document_name}_0{i}_final.json'), 'w') as file:
             json.dump(dict_variable_doc, file)

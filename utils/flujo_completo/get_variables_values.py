@@ -163,7 +163,41 @@ def get_variables_index(df_doc, dict_parameters, compare_function, treshold=0.85
     # json.dump(dict_variables, file)
 
   return dict_variables
-  
+
+
+def quitar_vacios_dic(d):
+  return {x: d[x] for x in d if pd.notna(d[x])}
+
+
+def processing_values_dict(json_object_older):
+
+  json_object = deepcopy(json_object_older)
+
+  json_object = quitar_vacios_dic(json_object)
+
+  for var in json_object.keys():
+    value = json_object[var]
+    
+    if isinstance(value, str): 
+    
+      value = value.strip()
+      value = re.sub(",","",value)
+      value = re.sub("\)$","",value)
+      value = re.sub("^\(","-",value)
+    
+      try:
+        value = float(value)
+      except:
+        value = np.nan 
+    
+
+    json_object[var] = value
+
+  json_object = quitar_vacios_dic(json_object)
+
+
+  return json_object
+
   
 def get_dict_vars_values(df, dict_vars, name_file="variables_indices.json"):
   
