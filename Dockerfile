@@ -2,7 +2,8 @@ FROM python:3.8.5
 
 RUN pip install --no-cache-dir matplotlib pandas
 
-RUN pip install python-poppler
+RUN apt-get update
+RUN apt-get install poppler-utils -y
 
 COPY ./requirements.txt /requirements.txt
 
