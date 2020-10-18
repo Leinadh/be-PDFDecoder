@@ -8,7 +8,7 @@ from flask import Flask, render_template, Response, request, redirect, jsonify
 from flask_cors import CORS
 
 
-from services.pdf_services import processDocument
+from services.pdf_services import analyze_text_pdf
 
 ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg', 'jpeg'])
 
@@ -44,7 +44,7 @@ def upload_file():
 	
     for file in files:		
         if file and allowed_file(file.filename):
-            output = processDocument(file.filename, file.read())  
+            output = analyze_text_pdf(file.filename, file.read())  
             output['file_name'] = file.filename
             responsesDocs.append(output)
             success = True
