@@ -1,6 +1,6 @@
 import boto3
 from services.textract_utils import process_text_local
-from services.currency_detector import get_currency_data
+#from services.currency_detector import get_currency_data
 from botocore.config import Config
 from statistics import mode
 import pandas as pd
@@ -15,7 +15,7 @@ from services.get_table import get_table_variables
 from services.get_variables_values import *
 import time
 import sys
-import spacy ## instalar
+##import spacy ## instalar
 from scipy.ndimage import interpolation as inter
 
 
@@ -25,8 +25,8 @@ from scipy.ndimage import interpolation as inter
 path_json_vars = "services/variables.json"
 split_sep = "<ESC>"
 OUTPUT_FORMAT = "png"
-path_model_nlp = "services/model"
-path_currency_simbols = "services/currency_symbols.json"
+##path_model_nlp = "services/model"
+##path_currency_simbols = "services/currency_symbols.json"
 
 
 
@@ -176,7 +176,36 @@ def get_bounding_boxes(df_image_col, dict_variables, dict_coord_values):
 
   return keyss, values
 
+def plot_boxes_to_image(source_img, variables_boxplot, values_boxplot):
+    cols_colors = ['blue','red']
+    FULL_WIDTH, FULL_HEIGHT = source_img.size
+    draw = ImageDraw.Draw(source_img)
+    for key in variables_boxplot:
+        left = key[0][0]
+        top = key[0][1]
+        height = key[0][2]
+        width = key[0][3]
+        x0 = (left)*FULL_WIDTH
+        y0 = (top)*FULL_HEIGHT
+        x1 = (left + width)*FULL_WIDTH
+        y1 = (top + height)*FULL_HEIGHT
+        draw.rectangle(((x0, y0), (x1, y1)), outline = 'blue', width = 1)
+    for value in values_boxplot:
+        left = value[0][0]
+        top = value[0][1]
+        height = value[0][2]
+        width = value[0][3]
+        x0 = (left)*FULL_WIDTH
+        y0 = (top)*FULL_HEIGHT
+        x1 = (left + width)*FULL_WIDTH
+        y1 = (top + height)*FULL_HEIGHT
+        draw.rectangle(((x0, y0), (x1, y1)), outline = 'red', width = 1)
+    return source_img
 
+def save_image2pdf(list_images, target_file_name):
+    img1 = list_images[0]
+    img_rest = list_images[1:]
+    img1.save(target_file_name,save_all=True, append_images=img_rest)
 
 
 def analyze_text_pdf(DOC_FILE, document):
@@ -191,9 +220,9 @@ def analyze_text_pdf(DOC_FILE, document):
 
 
 
-    nlp = spacy.load(path_model_nlp)
-    with open(path_currency_simbols, 'r') as file:
-        currency_symbols = json.load(file)
+    ##nlp = spacy.load(path_model_nlp)
+    ##with open(path_currency_simbols, 'r') as file:
+      ##  currency_symbols = json.load(file)
 
     if DOC_FILE.split(".")[-1] == "pdf":
         images = convert_from_bytes(document)
@@ -205,7 +234,7 @@ def analyze_text_pdf(DOC_FILE, document):
     dict_variable_doc = {}
 
     ##monedas = []
-
+    images_ploted = []
     for i, image in enumerate(images):
         image = images[i]
         image, _ = find_skew_angle(image, correct = True)
@@ -228,13 +257,13 @@ def analyze_text_pdf(DOC_FILE, document):
         
         df_doc_data = processing_text(df_doc_data)
 
-        pos_row = np.argmax(df_doc_data.applymap(is_year).sum(1).values)
-        n_first_rows = pos_row + 3
+        ##pos_row = np.argmax(df_doc_data.applymap(is_year).sum(1).values)
+        ##n_first_rows = pos_row + 3
         
-        moneda = get_currency_data(df_doc_data, nlp, currency_symbols, n_first_rows)
-        moneda = ",".join(moneda)
+        ##moneda = get_currency_data(df_doc_data, nlp, currency_symbols, n_first_rows)
+        ##moneda = ",".join(moneda)
 
-        monedas.append(moneda)
+        ##monedas.append(moneda)
 
         dict_variables = get_variables_index(df_doc_data, dict_parameters, sequence_matcher_similarity)
         
@@ -243,20 +272,25 @@ def analyze_text_pdf(DOC_FILE, document):
         boxes_keys, boxes_values = get_bounding_boxes(csv_with_columns, dict_variables, dict_coord_values)
 
         dict_variable_doc.update(dict_vars_values)
+
+        img1_with_boxes = plot_boxes_to_image(image.copy(),boxes_keys, boxes_values)
+        images_ploted.append(img1_with_boxes)
         #------------------ Print lines --------------------------#
+
+    save_image2pdf(images_ploted, 'mypdf.pdf')
 
     dict_variable_doc = processing_values_dict(dict_variable_doc)
     dict_variable_doc["DOCUMENTO"] = document_name
 
-    monedas = ",".join(monedas) 
+    ##monedas = ",".join(monedas) 
     
-    if monedas=="":
-        monedas = np.nan
+    ##if monedas=="":
+      ##  monedas = np.nan
 
-    dict_variable_doc["UNIDADES DE MEDIDA"] = monedas
+    ##dict_variable_doc["UNIDADES DE MEDIDA"] = monedas
 
-    dict_variable_doc = quitar_vacios_dic(dict_variable_doc)
-
+    ##dict_variable_doc = quitar_vacios_dic(dict_variable_doc)
+    
     # with open(os.path.join(path,output_add_path,f'{document_name}_0{i}_final.json'), 'w') as file:
     #    json.dump(dict_variable_doc, file)
 
