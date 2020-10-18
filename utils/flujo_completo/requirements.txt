@@ -1,0 +1,10 @@
+boto3
+pandas
+matplotlib
+Pillow
+sklearn
+numpy
+pdf2image
+fuzzywuzzy
+unidecode
+nltk
