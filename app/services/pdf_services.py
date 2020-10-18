@@ -277,11 +277,11 @@ def analyze_text_pdf(DOC_FILE, document):
         images_ploted.append(img1_with_boxes)
         #------------------ Print lines --------------------------#
 
-    save_image2pdf(images_ploted, 'mypdf.pdf')
+    save_image2pdf(images_ploted, document_name +'_withboxes.pdf')
 
     dict_variable_doc = processing_values_dict(dict_variable_doc)
     dict_variable_doc["DOCUMENTO"] = document_name
-
+    dict_variable_doc["DOCUMENTO CON CAJAS"] = document_name +'_withboxes.pdf'
     ##monedas = ",".join(monedas) 
     
     ##if monedas=="":
