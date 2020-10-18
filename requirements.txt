@@ -15,6 +15,7 @@ flask-cors==3.0.9
 # pandas==0.25.3
 # matplotlib
 #==3.3.2
+python-poppler
 Pillow
 sklearn
 pdf2image
