@@ -1,8 +1,6 @@
-FROM python:3.8.5-alpine3.12
+FROM python:3.8.5
 
-RUN apk --update add --no-cache g++
-
-RUN pip install pandas
+RUN pip install --no-cache-dir matplotlib pandas
 
 COPY ./requirements.txt /requirements.txt
 
