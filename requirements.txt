@@ -13,5 +13,8 @@ scipy
 spacy
 difflib
 
+# # table to dict:
+# difflib
+
 # # preprocess image
 # opencv-python
