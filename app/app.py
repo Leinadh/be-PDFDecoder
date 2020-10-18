@@ -28,6 +28,12 @@ def api_test_textract():
     output = processDocument()
     return Response(dumps(output), status=200, mimetype='application/json')
 
+
+@app.route('/extract-variables-pdf', methods=['POST'])
+def extract_varables_pdf():
+
+
+
 @app.route('/process-documents', methods=['POST'])
 def upload_file():
     # check if the post request has the file part
@@ -44,7 +50,7 @@ def upload_file():
 	
     for file in files:		
         if file and allowed_file(file.filename):
-            output = processDocument(file.read())  
+            output = processDocument(file.filename, file.read())  
             output['file_name'] = file.filename
             responsesDocs.append(output)
             success = True
