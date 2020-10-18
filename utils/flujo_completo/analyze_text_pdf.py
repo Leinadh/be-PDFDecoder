@@ -41,7 +41,7 @@ def main():
             image.save(source_file)
             _, lines = process_text_local(image, OUTPUT_FORMAT)
             #print ('miau')
-            lines, csv_with_columns = doc_lines_detector(lines,source_file, target_file,DOC_FILE)
+            lines, csv_with_columns = doc_lines_detector(lines,source_file, target_file,DOC_FILE, i)
             #print (target_file)
             #----------------- Data extraction ----------------------#
             df_doc_data = get_table_variables(csv_with_columns.sort_values('row').reset_index(drop=True))
@@ -58,7 +58,7 @@ def main():
             json.dump(dict_variable_doc, file)
         print (f"Process time: {time.time()-start_time}")
 
-def doc_lines_detector(blob_lines, source_image, target_image, DOC_FILE, tolerance = 0.1):
+def doc_lines_detector(blob_lines, source_image, target_image, DOC_FILE, index, tolerance = 0.1):
     '''
     target_image (str) : string object with target image name .png format
     '''
@@ -93,6 +93,7 @@ def doc_lines_detector(blob_lines, source_image, target_image, DOC_FILE, toleran
     csv_data = make_csv_with_text_data(doc_lines,doc_line_register)
     csv_with_columns = find_columns(csv_data)
     dl_ = DOC_FILE.split('.')[0]
+    dl_ = dl_ + "_" + str(index)
     csv_data.rename(columns = {'lines':'row','label': 'column'}).to_csv(f'image_{dl_}.csv', index = False)
     plot_image2image(source_image, csv_with_columns, target_image)
     csv_with_columns.rename(columns = {'lines':'row','label': 'column'}, inplace = True)

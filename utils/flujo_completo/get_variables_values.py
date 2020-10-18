@@ -178,13 +178,19 @@ def processing_values_dict(json_object_older):
   for var in json_object.keys():
     value = json_object[var]
     
+
+
     if isinstance(value, str): 
     
       value = value.strip()
       value = re.sub(",","",value)
+      value = re.sub("\.","",value)
+      print(value)
       value = re.sub("\)$","",value)
+      print(value)  
       value = re.sub("^\(","-",value)
-    
+      print(value)
+
       try:
         value = float(value)
       except:
