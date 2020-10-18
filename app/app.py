@@ -6,7 +6,6 @@ from json import dumps, load, loads
 
 from flask import Flask, render_template, Response, request, redirect, jsonify
 from flask_cors import CORS
-from werkzeug.utils import secure_filename
 
 
 from services.pdf_services import processDocument

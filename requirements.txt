@@ -3,25 +3,25 @@ requests==2.20.0
 boto3==1.15.18
 flask-cors==3.0.9
 
-# image to table:
-textract_utils
-botocore
-statistics
-pandas
-matplotlib
+
+# glob
+numpy==1.14.3
+cython
+pandas==0.25.3
+matplotlib==3.3.2
 Pillow
 sklearn
-numpy
-glob
 pdf2image
-boto3
-
-# table to dict:
-re
-nltk
-unidecode
 fuzzywuzzy
-difflib
+unidecode
+nltk
 
-# preprocess image
-opencv-python
+# # table to dict:
+# re
+# nltk
+# unidecode
+# fuzzywuzzy
+# difflib
+
+# # preprocess image
+# opencv-python
