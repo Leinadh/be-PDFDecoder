@@ -1,5 +1,5 @@
 import boto3
-from textract_utils import process_text_local
+from services.textract_utils import process_text_local
 from botocore.config import Config
 from statistics import mode
 import pandas as pd
@@ -10,16 +10,15 @@ import numpy as np
 import glob
 import os
 from pdf2image import convert_from_path, convert_from_bytes
-from get_table import get_table_variables
-from get_variables_values import *
+from services.get_table import get_table_variables
+from services.get_variables_values import *
 import time
 import sys
-
 
 ##path = '/home/stevramos/Documentos/HACKATHONBBVA2020/raw_data'
 ##output_add_path = 'output'
 
-path_json_vars = "variables.json"
+path_json_vars = "services/variables.json"
 
 split_sep = "<ESC>"
 

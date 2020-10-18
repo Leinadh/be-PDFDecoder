@@ -2,8 +2,8 @@ import boto3
 import io
 from io import BytesIO
 import sys
-from credentials import aws_access_key_id, aws_secret_access_key
-from config import region
+from services.credentials import aws_access_key_id, aws_secret_access_key
+from services.config import region
 import math
 from PIL import Image, ImageDraw, ImageFont
 
