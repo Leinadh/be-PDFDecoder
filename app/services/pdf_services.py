@@ -181,25 +181,31 @@ def plot_boxes_to_image(source_img, variables_boxplot, values_boxplot):
     FULL_WIDTH, FULL_HEIGHT = source_img.size
     draw = ImageDraw.Draw(source_img)
     for key in variables_boxplot:
-        left = key[0][0]
-        top = key[0][1]
-        height = key[0][2]
-        width = key[0][3]
-        x0 = (left)*FULL_WIDTH
-        y0 = (top)*FULL_HEIGHT
-        x1 = (left + width)*FULL_WIDTH
-        y1 = (top + height)*FULL_HEIGHT
-        draw.rectangle(((x0, y0), (x1, y1)), outline = 'blue', width = 1)
+        try:
+            left = key[0][0]
+            top = key[0][1]
+            height = key[0][2]
+            width = key[0][3]
+            x0 = (left)*FULL_WIDTH
+            y0 = (top)*FULL_HEIGHT
+            x1 = (left + width)*FULL_WIDTH
+            y1 = (top + height)*FULL_HEIGHT
+            draw.rectangle(((x0, y0), (x1, y1)), outline = 'blue', width = 1)
+        except:
+            pass
     for value in values_boxplot:
-        left = value[0][0]
-        top = value[0][1]
-        height = value[0][2]
-        width = value[0][3]
-        x0 = (left)*FULL_WIDTH
-        y0 = (top)*FULL_HEIGHT
-        x1 = (left + width)*FULL_WIDTH
-        y1 = (top + height)*FULL_HEIGHT
-        draw.rectangle(((x0, y0), (x1, y1)), outline = 'red', width = 1)
+        try:
+            left = value[0][0]
+            top = value[0][1]
+            height = value[0][2]
+            width = value[0][3]
+            x0 = (left)*FULL_WIDTH
+            y0 = (top)*FULL_HEIGHT
+            x1 = (left + width)*FULL_WIDTH
+            y1 = (top + height)*FULL_HEIGHT
+            draw.rectangle(((x0, y0), (x1, y1)), outline = 'red', width = 1)
+        except:
+            pass
     return source_img
 
 def save_image2pdf(list_images, target_file_name):
