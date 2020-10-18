@@ -17,7 +17,7 @@ import time
 import sys
 ##import spacy ## instalar
 from scipy.ndimage import interpolation as inter
-import cv2
+##import cv2
 
 ##path = '/home/stevramos/Documentos/HACKATHONBBVA2020/raw_data'
 ##output_add_path = 'output'
@@ -234,8 +234,8 @@ def analyze_text_pdf(DOC_FILE, document):
         images = convert_from_bytes(document)
     else:
         #pasar a imagen
-        document = Image.open(document).convert("RGBA")
-        document = fast_process_camera(document)
+        ##document = Image.open(document).convert("RGBA")
+        ##document = fast_process_camera(document)
         images = []
         images.append(document)
 
