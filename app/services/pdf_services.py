@@ -118,7 +118,7 @@ def find_skew_angle(img, correct = True):
         hist = np.sum(data, axis=1)
         score = np.sum((hist[1:] - hist[:-1]) ** 2)
         return hist, score
-    delta = 1
+    delta = .5
     limit = 5
     angles = np.arange(-limit, limit+delta, delta)
     scores = []
@@ -127,11 +127,11 @@ def find_skew_angle(img, correct = True):
         scores.append(score)
     best_score = max(scores)
     best_angle = angles[scores.index(best_score)]
-    print('Best angle: {}'.format(best_angle))
+    #print('Best angle: {}'.format(best_angle))
     # correct skew
     if correct:
-        data = inter.rotate(bin_img, best_angle, reshape=False, order=0)
-        img = Image.fromarray((255 * data).astype("uint8")).convert("RGB")
+        data = inter.rotate(img, best_angle, reshape=False, order=0)
+        img = Image.fromarray((data).astype("uint8")).convert("RGB")
     return img, best_angle
 
 
