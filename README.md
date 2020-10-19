@@ -12,7 +12,4 @@ Puedes ver el repositorio del frontend aqui https://github.com/Leinadh/fe-PDFDec
 
 Esta aplicacion consiste en detectar variables financieras como son activos, pasivos, patrimonios, etc de PYMES que desean solicitar algun servicio del banco. Actualmente la deteccion de estas se realizar de manera manual. Por ello, es necesario automatizar el proceso mencionado. Para ello, se uso el servicio de AWS Textract como OCR(Optical Character Recognition). Luego, a partir de algoritmos de machine learning y analisis de texto, se detectaron las variables correspondientes.  
 
-  Variables a detectar:
-  ```
-  
-  ```
+En promedio, se logro detectar 8 variables de las 12. Ademas, el tiempo de respuesta del modelo fue de 15 segundos comparado al tiempo promedio de un asesor que se encarga de esta tarea que es de 7 minutos
