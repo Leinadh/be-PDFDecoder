@@ -6,6 +6,6 @@
 2. Run the container locally: `docker run -it --rm -p 80:80 --name my-flask-app -v $(pwd)/app:/app my-flask-app`
 3. [http://localhost](http://localhost)
 
-'''
-UWU
-'''
+## APLICACION
+Esta aplicacion fue desarrollada en la Hackathon BBVA 2020
+Puedes ver el repositorio del frontend aqui https://github.com/Leinadh/fe-PDFDecoder
